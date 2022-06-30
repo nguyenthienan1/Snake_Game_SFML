@@ -7,7 +7,6 @@
 GameScreen::GameScreen()
 {
 	srand(time(0));
-	dir = 0;
 	TimePlaying = 0;
 	timemax = 15;
 	pause = false;
@@ -15,7 +14,7 @@ GameScreen::GameScreen()
 	arialFont.loadFromFile("font/arial.ttf");
 }
 
-void GameScreen::update(sf::RenderWindow &window)
+void GameScreen::update(sf::RenderWindow& window)
 {
 	float time = clock.getElapsedTime().asSeconds();
 	clock.restart();
@@ -23,7 +22,6 @@ void GameScreen::update(sf::RenderWindow &window)
 	{
 		TimePlaying += time;
 	}
-
 	sf::Event e;
 	while (window.pollEvent(e))
 	{
@@ -36,30 +34,29 @@ void GameScreen::update(sf::RenderWindow &window)
 			case sf::Keyboard::Space:
 				pause = !pause;
 				break;
+			case sf::Keyboard::A:
+				if (snake.dir != 0)
+					snake.dir = 2;
+				break;
+			case sf::Keyboard::D:
+				if (snake.dir != 2)
+					snake.dir = 0;
+				break;
+			case sf::Keyboard::W:
+				if (snake.dir != 1)
+					snake.dir = 3;
+				break;
+			case sf::Keyboard::S:
+				if (snake.dir != 3)
+					snake.dir = 1;
+				break;
 			}
 		}
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && dir != 0)
-	{
-		dir = 2;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && dir != 2)
-	{
-		dir = 0;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && dir != 1)
-	{
-		dir = 3;
-	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && dir != 3)
-	{
-		dir = 1;
-	}
-
 	if (!pause)
 	{
-		snake.Move(dir);
+		snake.Move();
 
 		for (int i = 0; i < snake.Length; i++)
 		{
@@ -133,7 +130,6 @@ void GameScreen::draw(sf::RenderWindow& window)
 
 void GameScreen::drawScore(sf::RenderWindow& window)
 {
-	// set score on dispaly
 	sf::Text text;
 	text.setFont(arialFont);
 	sf::String str = "Score: " + to_string(StaticNumber::SCORE);
@@ -143,8 +139,8 @@ void GameScreen::drawScore(sf::RenderWindow& window)
 	text.setPosition(StaticNumber::size, StaticNumber::size);
 	window.draw(text);
 }
-//draw time 
-void GameScreen::drawTime( sf::RenderWindow& window)
+
+void GameScreen::drawTime(sf::RenderWindow& window)
 {
 	sf::Text text;
 	text.setFont(arialFont);
@@ -156,10 +152,8 @@ void GameScreen::drawTime( sf::RenderWindow& window)
 	window.draw(text);
 }
 
-// draw text "Press space to pause game
 void GameScreen::drawPause(sf::RenderWindow& window)
 {
-	//set text
 	sf::Text text;
 	text.setFont(arialFont);
 	text.setCharacterSize(24);

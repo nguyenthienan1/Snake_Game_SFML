@@ -7,13 +7,13 @@ GameScreen* Game::gameScr = new GameScreen();
 
 Game::Game()
 {
-	window = new sf::RenderWindow(sf::VideoMode(StaticNumber::wWindow, StaticNumber::hWindow), "Snake Game!");
+	window = new sf::RenderWindow(sf::VideoMode(StaticNumber::wWindow, StaticNumber::hWindow), "Snake Game!", sf::Style::Close);
 }
 
 void Game::Run()
 {
-	menuScr->setMenuStart(window->getSize().x, window->getSize().y);
 	mainScr = menuScr;
+	window->setFramerateLimit(15);
 	while (window->isOpen())
 	{
 		mainScr->update(*window);
@@ -21,7 +21,5 @@ void Game::Run()
 		window->clear();
 		mainScr->draw(*window);
 		window->display();
-
-		sf::sleep(sf::milliseconds(60));
 	}
 }

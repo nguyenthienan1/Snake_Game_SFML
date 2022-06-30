@@ -8,7 +8,6 @@
 class GameScreen : public MainScreen
 {
 private:
-	int dir;
 	float TimePlaying;
 	float timemax;
 	bool pause;

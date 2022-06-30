@@ -2,76 +2,65 @@
 #include "SFML/Graphics.hpp"
 #include "Game.h"
 #include "GameScreen.h"
+#include <iostream>
 
 Menu::Menu()
 {
-	MaxItemTextMenu = 0;
-	selectedItemIndex = 0;
+	selectedItemIndex = -1;
 	font.loadFromFile("font/arial.ttf");
 	text.setFont(font);
 	text.setFillColor(sf::Color::White);
+	text.setString("Welcome to Snake Game");
+
+	menu[0].setFont(font);
+	menu[0].setString("Play");
+	menu[0].setPosition(2 * StaticNumber::size, 7 * StaticNumber::size);
+
+	menu[1].setFont(font);
+	menu[1].setString("Exit");
+	menu[1].setPosition(2 * StaticNumber::size, 10 * StaticNumber::size);
 }
 
 Menu::~Menu()
 {
 }
 
-//move up when press up key
-void Menu::MoveUp()
-{
-	if (selectedItemIndex - 1 >= 0)
-	{
-		menu[selectedItemIndex].setFillColor(sf::Color::White);
-		selectedItemIndex--;
-		menu[selectedItemIndex].setFillColor(sf::Color::Red);
-	}
-}
-// move down when press down key
-void Menu::MoveDown()
-{
-	if (selectedItemIndex + 1 < MaxItemTextMenu)
-	{
-		menu[selectedItemIndex].setFillColor(sf::Color::White);
-		selectedItemIndex++;
-		menu[selectedItemIndex].setFillColor(sf::Color::Red);
-	}
-}
-
 void Menu::update(sf::RenderWindow& window)
 {
-	sf::Event event;
-
-	while (window.pollEvent(event))
+	sf::Event e;
+	while (window.pollEvent(e))
 	{
-		// choose
-		switch (event.type)
+		bool flag = true;
+		switch (e.type)
 		{
-		case sf::Event::KeyReleased:
-			switch (event.key.code)
+		case sf::Event::MouseMoved:
+			for (int i = 0; i < MAX_ITEM_MENU; i++)
 			{
-			case sf::Keyboard::W:
-				MoveUp();
-				break;
-
-			case sf::Keyboard::S:
-				MoveDown();
-				break;
-
-			case sf::Keyboard::Return:
+				if (e.mouseMove.y <= menu[i].getPosition().y + 40 && e.mouseMove.y >= menu[i].getPosition().y && e.mouseMove.x <= menu[i].getPosition().x + 100 && e.mouseMove.x >= menu[i].getPosition().x)
+				{
+					selectedItemIndex = i;
+					flag = false;
+					break;
+				}
+			}
+			if (flag == true)
+			{
+				selectedItemIndex = -1;
+			}
+			break;
+		case sf::Event::MouseButtonReleased:
+			if (e.mouseButton.button == sf::Mouse::Left)
+			{
 				switch (GetPressedItem())
 				{
-
 				case 0:
 					Game::gameScr = new GameScreen();
 					Game::mainScr = Game::gameScr;
 					break;
-
 				case 1:
-					//exit;
 					window.close();
 					break;
 				}
-				break;
 			}
 			break;
 		case sf::Event::Closed:
@@ -83,28 +72,17 @@ void Menu::update(sf::RenderWindow& window)
 
 void Menu::draw(sf::RenderWindow& window)
 {
-	text.setString("Welcome to Snake Game");
 	window.draw(text);
-	for (int i = 0; i < MaxItemTextMenu; i++)
+	for (int i = 0; i < MAX_ITEM_MENU; i++)
 	{
+		if (i == selectedItemIndex)
+		{
+			menu[i].setFillColor(sf::Color::Green);
+		}
+		else
+		{
+			menu[i].setFillColor(sf::Color::White);
+		}
 		window.draw(menu[i]);
 	}
-}
-
-void Menu::setMenuStart(float width, float height)
-{
-	MaxItemTextMenu = 2;
-	// create play butotn
-	menu[0].setFont(font);
-	menu[0].setFillColor(sf::Color::Red);
-	menu[0].setString("Play");
-	menu[0].setPosition(sf::Vector2f(width / 2.26, height / (MaxItemTextMenu + 1) * 1));
-
-	//create exit button
-	menu[1].setFont(font);
-	menu[1].setFillColor(sf::Color::White);
-	menu[1].setString("Exit");
-	menu[1].setPosition(sf::Vector2f(width / 2.26, height / (MaxItemTextMenu + 1) * 2));
-	// select index use for button choose
-	selectedItemIndex = 0;
 }

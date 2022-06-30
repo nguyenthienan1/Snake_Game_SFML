@@ -10,6 +10,7 @@ Snake::Snake()
 	Length = 4;
 	A[0].x = 11;
 	A[0].y = 10;
+	dir = 0;
 }
 //draw snake
 void Snake::Draw(sf::RenderWindow& window)
@@ -22,7 +23,7 @@ void Snake::Draw(sf::RenderWindow& window)
 	}
 }
 // snake move in display
-void Snake::Move(int dir)
+void Snake::Move()
 {
 	// snanke len
 	for (int i = Length; i > 0; i--)
