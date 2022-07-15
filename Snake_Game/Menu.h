@@ -1,8 +1,8 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "MainScreen.h"
+#include <vector>
 
-#define MAX_ITEM_MENU 2
 class Menu : public MainScreen
 {
 public:
@@ -11,13 +11,11 @@ public:
 	int GetPressedItem() { return selectedItemIndex; }
 	void update(sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window);
-	sf::Texture background;
-	sf::Text text;
 
 private:
-	int selectedItemIndex;
 	sf::Font font;
-	sf::Text menu[MAX_ITEM_MENU];
-
+	sf::Text text;
+	int selectedItemIndex;
+	std::vector<sf::Text> listItemMenu;
 };
 

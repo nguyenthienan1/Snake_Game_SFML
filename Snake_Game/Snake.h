@@ -14,6 +14,7 @@ public:
 	Snake();
 	void Draw(sf::RenderWindow& window);
 	void Move();
+	void reset();
 };
 
 

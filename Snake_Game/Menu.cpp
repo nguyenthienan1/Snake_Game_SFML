@@ -8,17 +8,23 @@ Menu::Menu()
 {
 	selectedItemIndex = -1;
 	font.loadFromFile("font/arial.ttf");
+
 	text.setFont(font);
 	text.setFillColor(sf::Color::White);
 	text.setString("Welcome to Snake Game");
 
-	menu[0].setFont(font);
-	menu[0].setString("Play");
-	menu[0].setPosition(2 * StaticNumber::size, 7 * StaticNumber::size);
+	sf::Text text1;
+	text1.setFont(font);
+	text1.setString("Play");
+	text1.setPosition(3 * StaticNumber::size, 8 * StaticNumber::size);
 
-	menu[1].setFont(font);
-	menu[1].setString("Exit");
-	menu[1].setPosition(2 * StaticNumber::size, 10 * StaticNumber::size);
+	sf::Text text2;
+	text2.setFont(font);
+	text2.setString("Exit");
+	text2.setPosition(3 * StaticNumber::size, 13 * StaticNumber::size);
+
+	listItemMenu.push_back(text1);
+	listItemMenu.push_back(text2);
 }
 
 Menu::~Menu()
@@ -34,9 +40,9 @@ void Menu::update(sf::RenderWindow& window)
 		switch (e.type)
 		{
 		case sf::Event::MouseMoved:
-			for (int i = 0; i < MAX_ITEM_MENU; i++)
+			for (int i = 0; i < listItemMenu.size(); i++)
 			{
-				if (e.mouseMove.y <= menu[i].getPosition().y + 40 && e.mouseMove.y >= menu[i].getPosition().y && e.mouseMove.x <= menu[i].getPosition().x + 100 && e.mouseMove.x >= menu[i].getPosition().x)
+				if (e.mouseMove.y <= listItemMenu[i].getPosition().y + 40 && e.mouseMove.y >= listItemMenu[i].getPosition().y && e.mouseMove.x <= listItemMenu[i].getPosition().x + 100 && e.mouseMove.x >= listItemMenu[i].getPosition().x)
 				{
 					selectedItemIndex = i;
 					flag = false;
@@ -54,7 +60,7 @@ void Menu::update(sf::RenderWindow& window)
 				switch (GetPressedItem())
 				{
 				case 0:
-					Game::gameScr = new GameScreen();
+					Game::gameScr->reset();
 					Game::mainScr = Game::gameScr;
 					break;
 				case 1:
@@ -73,16 +79,19 @@ void Menu::update(sf::RenderWindow& window)
 void Menu::draw(sf::RenderWindow& window)
 {
 	window.draw(text);
-	for (int i = 0; i < MAX_ITEM_MENU; i++)
+	for (int i = 0; i < listItemMenu.size(); i++)
 	{
-		if (i == selectedItemIndex)
+		if (i == GetPressedItem())
 		{
-			menu[i].setFillColor(sf::Color::Green);
+			listItemMenu[i].setFillColor(sf::Color::White);
+			listItemMenu[i].setOutlineThickness(3);
+			listItemMenu[i].setOutlineColor(sf::Color::Blue);
 		}
 		else
 		{
-			menu[i].setFillColor(sf::Color::White);
+			listItemMenu[i].setOutlineThickness(0);
+			listItemMenu[i].setFillColor(sf::Color::White);
 		}
-		window.draw(menu[i]);
+		window.draw(listItemMenu[i]);
 	}
 }

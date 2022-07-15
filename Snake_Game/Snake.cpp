@@ -10,6 +10,12 @@ Snake::Snake()
 	Length = 4;
 	A[0].x = 11;
 	A[0].y = 10;
+	A[1].x = 10;
+	A[1].y = 10;
+	A[2].x = 9;
+	A[2].y = 10;
+	A[3].x = 8;
+	A[3].y = 10;
 	dir = 0;
 }
 //draw snake
@@ -45,4 +51,18 @@ void Snake::Move()
 		A[0].y = A[0].y - 1;
 		break;
 	}
+}
+
+void Snake::reset()
+{
+	Length = 4;
+	A[0].x = 11;
+	A[0].y = 10;
+	A[1].x = 10;
+	A[1].y = 10;
+	A[2].x = 9;
+	A[2].y = 10;
+	A[3].x = 8;
+	A[3].y = 10;
+	dir = 0;
 }

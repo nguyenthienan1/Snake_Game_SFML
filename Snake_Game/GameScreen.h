@@ -11,18 +11,19 @@ private:
 	float TimePlaying;
 	float timemax;
 	bool pause;
+	int Score;
 	Snake snake;
 	Food food;
 	Zone zone;
 	sf::Font arialFont;
 	sf::Clock clock;
+	sf::Text textScore;
+	sf::Text textTime;
+	sf::Text textPause;
 public:
 	void update(sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window);
-	
+	void reset();
 	GameScreen();
-	void drawScore(sf::RenderWindow& window);
-	void drawTime(sf::RenderWindow& window);
-	void drawPause(sf::RenderWindow& window);
 };
 

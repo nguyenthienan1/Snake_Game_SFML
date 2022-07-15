@@ -10,8 +10,24 @@ GameScreen::GameScreen()
 	TimePlaying = 0;
 	timemax = 15;
 	pause = false;
+	Score = 0;
 	food.Random(zone);
 	arialFont.loadFromFile("font/arial.ttf");
+
+	textScore.setFont(arialFont);
+	textScore.setCharacterSize(24);
+	textScore.setFillColor(sf::Color::White);
+	textScore.setPosition(StaticNumber::size, StaticNumber::size);
+
+	textTime.setFont(arialFont);
+	textTime.setCharacterSize(24);
+	textTime.setFillColor(sf::Color::White);
+	textTime.setPosition(10 * StaticNumber::size, StaticNumber::size);
+
+	textPause.setFont(arialFont);
+	textPause.setCharacterSize(24);
+	textPause.setFillColor(sf::Color::White);
+	textPause.setPosition(20 * StaticNumber::size, StaticNumber::size);
 }
 
 void GameScreen::update(sf::RenderWindow& window)
@@ -21,6 +37,7 @@ void GameScreen::update(sf::RenderWindow& window)
 	if (!pause)
 	{
 		TimePlaying += time;
+
 	}
 	sf::Event e;
 	while (window.pollEvent(e))
@@ -54,8 +71,16 @@ void GameScreen::update(sf::RenderWindow& window)
 		}
 	}
 
+
+
 	if (!pause)
 	{
+		textPause.setString("Press space to pause game...");
+		sf::String strScore = "Score: " + std::to_string(Score);
+		textScore.setString(strScore);
+		sf::String strTime = "Time: " + std::to_string((int)TimePlaying);
+		textTime.setString(strTime);
+
 		snake.Move();
 
 		for (int i = 0; i < snake.Length; i++)
@@ -65,7 +90,7 @@ void GameScreen::update(sf::RenderWindow& window)
 				if (i == 0) // Chỉ đầu rắn chạm thức ăn mới được điểm
 				{
 					snake.Length++;
-					StaticNumber::SCORE += 10;
+					Score += 10;
 				}
 				food.Random(zone);
 			}
@@ -78,6 +103,7 @@ void GameScreen::update(sf::RenderWindow& window)
 				timemax += 15;
 				zone.w -= 2;
 				zone.h -= 2;
+				zone.update();
 				if (food.x >= zone.w + zone.position || food.x < zone.position || food.y >= zone.h + zone.position || food.y < zone.position)
 				{
 					//food đang ở ngoài phạm vi zone thì mới random lại
@@ -107,11 +133,14 @@ void GameScreen::update(sf::RenderWindow& window)
 			if (snake.A[0].y < zone.position) snake.A[0].y = zone.h + (zone.position - 1);
 		}
 	}
+	else
+	{
+		textPause.setString("Press space to continue...");
+	}
 }
 
 void GameScreen::draw(sf::RenderWindow& window)
 {
-	//setting for game graphic
 	if (StaticNumber::MODE == 1)
 	{
 		zone.DrawModeEasy(window);
@@ -123,50 +152,22 @@ void GameScreen::draw(sf::RenderWindow& window)
 
 	snake.Draw(window);
 	food.Draw(window);
-	drawScore(window);
-	drawTime(window);
-	drawPause(window);
+	window.draw(textScore);
+	window.draw(textTime);
+	window.draw(textPause);
 }
 
-void GameScreen::drawScore(sf::RenderWindow& window)
+void GameScreen::reset()
 {
-	sf::Text text;
-	text.setFont(arialFont);
-	sf::String str = "Score: " + to_string(StaticNumber::SCORE);
-	text.setString(str);
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::White);
-	text.setPosition(StaticNumber::size, StaticNumber::size);
-	window.draw(text);
-}
-
-void GameScreen::drawTime(sf::RenderWindow& window)
-{
-	sf::Text text;
-	text.setFont(arialFont);
-	sf::String str = "Time: " + to_string((int)TimePlaying);
-	text.setString(str);
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::White);
-	text.setPosition(10 * StaticNumber::size, StaticNumber::size);
-	window.draw(text);
-}
-
-void GameScreen::drawPause(sf::RenderWindow& window)
-{
-	sf::Text text;
-	text.setFont(arialFont);
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::White);
-	text.setPosition(20 * StaticNumber::size, StaticNumber::size);
-	if (!pause)
-	{
-		text.setString("Press space to pause game...");
-	}
-	else
-	{
-		text.setString("Press space to continue...");
-	}
-	window.draw(text);
+	srand(time(0));
+	TimePlaying = 0;
+	timemax = 15;
+	pause = false;
+	Score = 0;
+	food.Random(zone);
+	snake.reset();
+	zone.w = 30;
+	zone.h = 20;
+	zone.update();
 }
 
